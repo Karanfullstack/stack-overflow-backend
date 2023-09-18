@@ -6,7 +6,7 @@ const profileController = {
    async getProfile(req, res){
      // chekc if user has profile 
      try {
-       const profile = await Profile.findOne({user:req.user._id})
+       const profile = await Profile.findOne({user:req.user._id}).populate('user',["profilepic","name"])
        if(!profile){
          return res.status(404).json({success:false, message:"You dont' have Profile"})
        }
@@ -54,6 +54,17 @@ const profileController = {
           })
        }
     }).catch((error)=> console.log(error))
+   },
+
+   // GET PROFILE BY USERNAME IN URL
+
+   async getProfileByUserName(req, res){
+      const {username} = req.params;
+      const profile = await Profile.findOne({username});
+      if(!profile){
+        return res.status(400).json({message:`No profile found with this ${username}`})
+      }
+      res.status(201).json(profile)
    }
 }
 
