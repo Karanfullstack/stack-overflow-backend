@@ -34,7 +34,7 @@ const userController = {
       try {
         const user = await User.login(email, password);
         const token = createToken(user._id)
-        res.status(201).json(user)
+        res.status(201).json({token:"Bearer " + token})
       } catch (err) {
         const errors = errorHandler(err)
         res.status(400).json(errors)
