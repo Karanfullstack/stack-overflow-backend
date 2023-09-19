@@ -119,7 +119,40 @@ if(profile){
     } catch (error) {
       console.log(error)
     }
- 
+},
+
+// ADDING WORK-ROLE INTO USER PROFILE
+async addWorkRole(req, res){
+  const {role, company,country, from, to, current, details} = req.body;
+  try {
+    const profile = await Profile.findOne({user:req.user._id});
+    if(!profile){
+      return res.json({success:false, message:"Profile not avialable"})
+    }
+    const work = {role,company,country,from,to,current,details}
+    profile.workrole.unshift(work)
+    await profile.save()
+    res.status(201).json({success:true, message:'Work role added succssfully'})
+  } catch (error) {
+    console.log(error)
+  }
+},
+
+// DELETING WORK-ROLE INTO USER PROFILE;
+
+async deleteWork(req, res){
+  try {
+    const profile = await Profile.findOne({user:req.user._id});
+    if(!profile){
+      return res.status(401).json({message:"No Profile Found"})
+    }
+    const removethis = profile.workrole.map((item)=> item._id).indexOf(req.params.workId);
+      profile.workrole.splice(removethis, 1);
+      await profile.save()
+     res.json({message:"work role deleted"})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 }

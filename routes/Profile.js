@@ -19,7 +19,14 @@ router.get("/profile/get/all", profileController.getProfileAll);
 
 // DELETE USER & PROFILE
 
-router.delete("/profile", passport.authenticate('jwt', {session:false}), profileController.deleteProfile)
+router.delete("/profile", passport.authenticate('jwt', {session:false}), profileController.deleteProfile);
+
+
+// ADDING WORK-ROLE INTO USER PROFILE
+router.post('/profile/work/add', passport.authenticate('jwt',{session:false}), profileController.addWorkRole);
+
+// DELETING WORK-ROLE INTO USER PROFILE;
+router.delete("/profile/workrole/:workId", passport.authenticate('jwt', {session:false}), profileController.deleteWork)
 
 module.exports = router;
 
