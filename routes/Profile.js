@@ -28,6 +28,7 @@ router.post('/profile/work/add', passport.authenticate('jwt',{session:false}), p
 // DELETING WORK-ROLE INTO USER PROFILE;
 router.delete("/profile/workrole/:workId", passport.authenticate('jwt', {session:false}), profileController.deleteWork)
 
+
 module.exports = router;
 
 

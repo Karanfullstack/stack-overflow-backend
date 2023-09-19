@@ -146,7 +146,7 @@ async deleteWork(req, res){
     if(!profile){
       return res.status(401).json({message:"No Profile Found"})
     }
-    const removethis = profile.workrole.map((item)=> item._id).indexOf(req.params.workId);
+    const removethis = profile.workrole.map((item)=> item.user).indexOf(req.params.workId);
       profile.workrole.splice(removethis, 1);
       await profile.save()
      res.json({message:"work role deleted"})
