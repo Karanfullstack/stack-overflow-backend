@@ -1,4 +1,3 @@
-const { json } = require('body-parser')
 const Profile = require('../models/Profile')
 
 const profileController = {
@@ -92,6 +91,19 @@ if(profile){
         console.log(error)
         res.status(400).json({message:"Argument passed in must be a string of 24"})
       } 
+  },
+
+  // GETTING ALL PROFILE 
+  async getProfileAll(req, res){
+    try {
+      const profile = await Profile.find();
+      if(!profile){
+        return res.json({success:false, message:"Proilfe Model is empty"})
+      }
+      res.status(201).json({success:true, length:profile.length, profile})
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 

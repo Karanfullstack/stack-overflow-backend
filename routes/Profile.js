@@ -14,6 +14,10 @@ router.get('/profile/:username', profileController.getProfileByUserName)
 // GETTING PROFILE PARAMS URL
 router.get("/profile/id/:id", profileController.getProfileByUrl)
 
+// GETTING ALL PROFILE
+router.get("/profile/get/all", profileController.getProfileAll)
 
-module.exports = router
+module.exports = router;
+
+
 
