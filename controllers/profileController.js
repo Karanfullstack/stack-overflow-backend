@@ -1,5 +1,5 @@
 const Profile = require('../models/Profile')
-
+const User = require('../models/User')
 const profileController = {
 
 // GET PROFILE CONTROLLER - /profile
@@ -104,7 +104,24 @@ if(profile){
     } catch (error) {
       console.log(error)
     }
-  }
+  },
+
+  // DELETING UESER AND ITS PROFILE 
+  async deleteProfile(req, res){
+   
+    try {
+       const profile = await Profile.findOne({user:req.user._id});
+    if(profile){
+      await Profile.findOneAndRemove({_id:profile._id});
+      await User.findByIdAndRemove({_id:req.user._id});
+      res.json({success:true, message:"DELETED SUCCESS"})
+    }
+    } catch (error) {
+      console.log(error)
+    }
+ 
+}
+
 }
 
 module.exports = profileController

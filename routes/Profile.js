@@ -15,7 +15,11 @@ router.get('/profile/:username', profileController.getProfileByUserName)
 router.get("/profile/id/:id", profileController.getProfileByUrl)
 
 // GETTING ALL PROFILE
-router.get("/profile/get/all", profileController.getProfileAll)
+router.get("/profile/get/all", profileController.getProfileAll);
+
+// DELETE USER & PROFILE
+
+router.delete("/profile", passport.authenticate('jwt', {session:false}), profileController.deleteProfile)
 
 module.exports = router;
 
