@@ -10,4 +10,10 @@ router.post("/profile", passport.authenticate('jwt', {session:false}), profileCo
 
 // GETTING PROFILE BY USERNAME WITH PARAMS
 router.get('/profile/:username', profileController.getProfileByUserName)
+
+// GETTING PROFILE PARAMS URL
+router.get("/profile/id/:id", profileController.getProfileByUrl)
+
+
 module.exports = router
+
