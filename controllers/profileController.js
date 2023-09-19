@@ -1,3 +1,4 @@
+const { json } = require('body-parser')
 const Profile = require('../models/Profile')
 
 const profileController = {
@@ -34,8 +35,14 @@ const profileController = {
      if(req.body.youtube) profileValues.socials.youtube = req.body.youtube
      if(req.body.facebook) profileValues.socials.facebook = req.body.facebook
      // end socials values
-   
-
+  
+const profile = await Profile.findOne({user:req.user._id});
+if(profile){
+  const checkuser = await Profile.findOne({username:profileValues.username});
+  if(checkuser && checkuser.username !== profile.username){
+    return res.json('username is already taken')
+  }
+}
     // Updating profile
     Profile.findOne({user:req.user._id}).then((profile)=>{
        if(profile){
@@ -60,12 +67,32 @@ const profileController = {
 
    async getProfileByUserName(req, res){
       const {username} = req.params;
-      const profile = await Profile.findOne({username});
+      try {
+        const profile = await Profile.findOne({username}).populate('user',["name","profilepic"]);
       if(!profile){
         return res.status(400).json({message:`No profile found with this ${username}`})
       }
       res.status(201).json(profile)
-   }
+      } catch (error) {
+          console.log(error)
+      } 
+   },
+
+
+   // GET PROFILE BY URL
+
+  async getProfileByUrl(req, res){
+      try {
+        const profile = await Profile.findById(req.params.id).populate("user",["name","profilepic"])
+        if(!profile){
+          return res.status(400).json({success:false, message:"No Profile Found"})
+        }
+        res.status(201).json({success:true, profile})
+      } catch (error) {
+        console.log(error)
+        res.status(400).json({message:"Argument passed in must be a string of 24"})
+      } 
+  }
 }
 
 module.exports = profileController
