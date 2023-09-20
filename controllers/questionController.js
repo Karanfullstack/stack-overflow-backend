@@ -50,20 +50,24 @@ const questionController = {
 
    async upVote(req, res){
       try {
-        const question = await Question.findById(req.params.id)
+        const question = await Question.findById(req.params.id).populate()
         if(!question){
           return res.status(404).json({success:false, message:"Question Is Not Available"})
         }
-        const exists = question.upvotes.find((item)=> item.user.toString() === req.user._id.toString())
-        if(exists){
-          const removeThis = question.upvotes.map((item)=> item._id).indexOf(req.user._id);
-          question.upvotes.splice(removeThis, 1)
-          await question.save()
-          return res.status(201).json({message:'Removed Vote'})
+        // upvote logic...
+
+        const userVoteIndex = question.upvotes.findIndex(item => item.user.toString() === req.user._id.toString())
+        
+        if(userVoteIndex !== -1){
+          question.upvotes = question.upvotes.filter(item => item.user.toString() !== req.user._id.toString())
+          await question.save();
+          return res.status(201).json({sucess:true, question})
         }
-        question.upvotes.unshift({user:req.user._id})
-        await question.save();
-        res.status(201).json({success:true, question})
+         else{
+            question.upvotes.unshift({user:req.user._id})
+            question.save()
+            return res.status(201).json({sucess:true, message:"Upvoted Sucess", question})
+         }
       } catch (error) {
         console.log(error)
       }
