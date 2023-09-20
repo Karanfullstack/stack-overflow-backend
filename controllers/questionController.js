@@ -97,13 +97,13 @@ const questionController = {
       }
    },
 
-   // POST ANSWERS BY USER
+   // DELETE ANSWERS BY USER
    async deleteAnswer(req, res){
       try {
         const question = Question.findById(req.params.id);
         if(!question) return res.status(404).json({message})
       } catch (error) {
-        
+         console.log(error)
       }
    }
 }

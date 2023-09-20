@@ -15,8 +15,6 @@ router.get('/question/:id', passport.authenticate('jwt', {session:false}), quest
 //  UPVOTES TO QUESTION BY ID
 router.post('/question/vote/:id', passport.authenticate('jwt', {session:false}), questionController.upVote)
 
-
-
 //  ANSWER TO QUESTION BY ID
 router.post('/question/answer/:id', passport.authenticate('jwt', {session:false}), questionController.postAnswer)
 
