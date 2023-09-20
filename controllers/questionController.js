@@ -22,7 +22,7 @@ const questionController = {
 
   async getQuestions(req, res){
     try {
-      const questions = await Question.find()
+      const questions = await Question.find().populate("answers.user",["name","profilepic"])
       if(!questions){
         return res.status(401).json({success:fase, message:"No Questions Found!"})
       }
@@ -36,7 +36,7 @@ const questionController = {
   async getQuestionById(req,res){
     
     try {
-      const question = await Question.findById(req.params.id)
+      const question = await Question.findById(req.params.id).populate("answers.user",["name","profilepic"])
       if(!question){
         return res.status(404).json({success:false, message:"No Question Available"})
       }
@@ -70,6 +70,40 @@ const questionController = {
          }
       } catch (error) {
         console.log(error)
+            res.status(500).json({ success: false, message: "An error occurred while Upvoting and Unvoting." });
+
+      }
+   },
+
+   // POST ANSWERS BY USER
+   async postAnswer(req, res){
+      try {
+        // get question id where you want to post answer
+        const question = await Question.findById(req.params.id)
+        if(!question){
+          return res.status(404).json({sucess:false, message:"No Question Found"})
+        }
+        // creating new answer
+        const newAnswer = {
+          text:req.body.text,
+          user:req.user._id,
+          name:req.user.name
+        }
+        question.answers.unshift(newAnswer)
+        await question.save()
+        res.status(201).json({sucess:true, message:"Answer posted sucessfully", question})
+      } catch (error) {
+        console.log(error)
+      }
+   },
+
+   // POST ANSWERS BY USER
+   async deleteAnswer(req, res){
+      try {
+        const question = Question.findById(req.params.id);
+        if(!question) return res.status(404).json({message})
+      } catch (error) {
+        
       }
    }
 }
