@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const Question = require('../models/Question');
 
 const questionController = {
@@ -26,6 +27,7 @@ const questionController = {
       if(!questions){
         return res.status(401).json({success:fase, message:"No Questions Found!"})
       }
+      
       res.status(201).json({success:true, length:questions.length, questions})
     } catch (error) {
       
@@ -98,14 +100,25 @@ const questionController = {
    },
 
    // DELETE ANSWERS BY USER
-   async deleteAnswer(req, res){
+    async deleteAnswer(req, res){
       try {
-        const question = Question.findById(req.params.id);
-        if(!question) return res.status(404).json({message})
+        const question = await Question.findById(req.params.question_id);
+        if(!question){
+          return res.status(404).json({sucess:false, message:"No Question Found!"})
+        }
+      // find user in answer 
+
+    const answer = question.answers.find((item)=> item._id.toString()=== req.params.ans_id.toString())
+    if(answer.user.toString()===req.user._id.toString()){
+      return res.json({user:"found"})
+    } else{
+      return  res.json({message:"notfound"})
+    }
+
       } catch (error) {
-         console.log(error)
+        console.log(error)
       }
-   }
+    }
 }
 
 

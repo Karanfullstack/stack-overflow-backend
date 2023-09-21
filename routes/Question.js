@@ -16,7 +16,9 @@ router.get('/question/:id', passport.authenticate('jwt', {session:false}), quest
 router.post('/question/vote/:id', passport.authenticate('jwt', {session:false}), questionController.upVote)
 
 //  ANSWER TO QUESTION BY ID
-router.post('/question/answer/:id', passport.authenticate('jwt', {session:false}), questionController.postAnswer)
+router.post('/question/answer/:id', passport.authenticate('jwt', {session:false}), questionController.postAnswer);
 
+
+router.delete("/question/:question_id/answer/:ans_id", passport.authenticate('jwt',{session:false}), questionController.deleteAnswer)
 
 module.exports = router
