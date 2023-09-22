@@ -102,20 +102,31 @@ const questionController = {
    // DELETE ANSWERS BY USER
     async deleteAnswer(req, res){
       try {
+        // find question
         const question = await Question.findById(req.params.question_id);
         if(!question){
           return res.status(404).json({sucess:false, message:"No Question Found!"})
         }
-      // find user in answer 
 
-    const answer = question.answers.find((item)=> item._id.toString()=== req.params.ans_id.toString())
-    if(answer.user.toString()===req.user._id.toString()){
-      return res.json({user:"found"})
-    } else{
-      return  res.json({message:"notfound"})
-    }
+    
+    // checking answer if exists 
+   const answerIndex = question.answers.findIndex((item)=> item._id.toString() === req.params.ans_id)
 
-      } catch (error) {
+if(answerIndex === -1){
+   return res.status(404).json({ success: false, message: "Answer not found!" }); 
+}
+// chekcing if user exists in answer
+
+const answer = question.answers[answerIndex];
+console.log(answer)
+if(answer.user._id.toString() !== req.user._id.toString()){
+  return res.status(403).json({ success: false, message: "User is not authorized to delete this answer" });
+}
+ question.answers.splice(answerIndex, 1);
+ await question.save()
+ return res.json({ success: true, message: "Answer has been deleted!", question })
+      } 
+      catch (error) {
         console.log(error)
       }
     }
