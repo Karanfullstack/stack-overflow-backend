@@ -57,7 +57,16 @@ const questionController = {
         }
         // upvote logic...
        
+       const voteIndex = question.upvotes.findIndex((index)=> index.user.toString() === req.user._id.toString())
       
+      if(voteIndex !== -1){
+        question.upvotes.splice(voteIndex);
+        await question.save()
+        return res.status(201).json({success:true, message:"donw voted"})
+      }   
+        question.upvotes.unshift({user:req.user._id})
+        await question.save();
+        res.status(201).json({success:true, message:"upvoted"})
       } catch (error) {
         console.log(error)
             res.status(500).json({ success: false, message: "An error occurred while Upvoting and Unvoting." });
