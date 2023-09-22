@@ -108,20 +108,20 @@ const questionController = {
           return res.status(404).json({sucess:false, message:"No Question Found!"})
         }
 
-    
     // checking answer if exists 
    const answerIndex = question.answers.findIndex((item)=> item._id.toString() === req.params.ans_id)
 
 if(answerIndex === -1){
    return res.status(404).json({ success: false, message: "Answer not found!" }); 
 }
-// chekcing if user exists in answer
-
+// index of answer
 const answer = question.answers[answerIndex];
-console.log(answer)
+
+// checking if user is exists in answer
 if(answer.user._id.toString() !== req.user._id.toString()){
   return res.status(403).json({ success: false, message: "User is not authorized to delete this answer" });
 }
+// after user verified, user is deleted
  question.answers.splice(answerIndex, 1);
  await question.save()
  return res.json({ success: true, message: "Answer has been deleted!", question })
